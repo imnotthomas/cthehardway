@@ -14,6 +14,13 @@ int main(int argc, char *argv[])
 
   int num_states = 4;
   i = 0; // watch for this
+
+  while(i < num_states) {
+    states[i] = argv[i+1];
+    i++;
+  }
+
+  i = 0;
   while(i < num_states) {
     printf("state %d: %s\n", i, states[i]);
     i++;
