@@ -153,6 +153,27 @@ void Database_list(struct Connection *conn)
   }
 }
 
+void Database_find(struct Connection *conn, char *name)
+{
+  int i = 0;
+  struct Database *db = conn->db;
+  
+  for(i = 0; i < MAX_ROWS; i++) {
+    struct Address *cur = &db->rows[i];
+
+    if(strcmp(cur->name, name)==0) {
+      Address_print(cur);
+    }
+  }
+  /*
+  printf("%ld\n", sizeof(name));
+
+  struct Address *c = &db->rows[1];
+  printf("%ld\n", sizeof(c->name));
+  printf("%d\n", strcmp(c->name, name));
+  */
+}
+
 int main(int argc, char *argv[])
 {
   if(argc < 3) die("USAGE: ex17 <dbfile> <action> [action params]");
@@ -161,8 +182,15 @@ int main(int argc, char *argv[])
   char action = argv[2][0];
   struct Connection *conn = Database_open(filename, action);
   int id = 0;
+  char *name = "\0";
 
-  if(argc > 3) id = atoi(argv[3]);
+  if(strcmp(argv[2],"f")==0){
+    name = argv[3];
+  }
+  else if(argc > 3) {
+    id = atoi(argv[3]);
+  }
+  
   if(id >= MAX_ROWS) die("There's not that many records");
 
   switch(action) {
@@ -192,6 +220,11 @@ int main(int argc, char *argv[])
   case 'l':
     Database_list(conn);
     break;
+
+  case 'f':
+    Database_find(conn, name);
+    break;
+
   default:
     die("Invalid action, only: c=create, g=get, s=set, d=del, l=list");
   }
