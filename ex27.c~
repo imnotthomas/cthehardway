@@ -1,0 +1,38 @@
+#undef NDEBUG
+#include "dbg.h"
+#include <stdio.h>
+#include <assert.h>
+
+int safercopy(int from_len, char *from, int to_len, char *to)
+{
+  assert(from != NULL && to != NULL && "from and to can't be NULL");
+
+  int i = 0;
+  int max = from_len > to_len - 1 ? to_len - 1 : from_len;
+
+  if(from_len < 0 || to_len <= 0) return -1;
+
+  for(i = 0; i < max; i++) {
+    to[i] = from[i];
+  }
+
+  to[to_len - 1] = "\0";
+
+  return i;
+}
+
+int main()
+{
+  char from[] = "0123456789";
+  int from_len = sizeof(from);
+
+  char to[] = "0123456";
+  int to_len = sizeof(to);
+
+  int rc = safercopy(from_len, from, to_len, to);
+
+  printf("to %s\n", to);
+  printf("rc %d\n", rc);
+
+  return 0;
+}
